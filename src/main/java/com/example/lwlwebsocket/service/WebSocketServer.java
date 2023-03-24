@@ -1,5 +1,6 @@
 package com.example.lwlwebsocket.service;
 
+import com.example.lwlwebsocket.dao.ChatsMapper;
 import com.example.lwlwebsocket.vo.ChatVo;
 import com.example.lwlwebsocket.vo.MessageEntity;
 import com.example.lwlwebsocket.entity.MessageEntityDecode;
@@ -36,6 +37,9 @@ public class WebSocketServer {
     private static final Map<Long, Session> WEBSOCKET_MAP = new ConcurrentHashMap<>();
 
     @Autowired
+    public ChatsMapper chatsMapper;
+
+    @Autowired
     public WebSocketServer(Gson gson, RedisUtil redis) {
         this.gson = gson;
         this.redis = redis;
@@ -69,6 +73,8 @@ public class WebSocketServer {
             chatVo.setOnline(message.getChats().getOnline());
             chatVo.setAvatar(message.getChats().getAvatar());
             message.setChatVo(chatVo);
+            chatsMapper.insert(message.getChats());
+            chatsMapper.insert(message.getChatsfrom());
         }
 
         System.out.println(message.getTo());
