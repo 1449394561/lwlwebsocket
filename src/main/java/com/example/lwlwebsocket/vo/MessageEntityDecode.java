@@ -1,4 +1,4 @@
-package com.example.lwlwebsocket.entity;
+package com.example.lwlwebsocket.vo;
 
 import com.example.lwlwebsocket.vo.MessageEntity;
 import com.google.gson.GsonBuilder;

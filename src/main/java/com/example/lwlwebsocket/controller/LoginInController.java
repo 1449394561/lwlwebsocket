@@ -1,6 +1,6 @@
 package com.example.lwlwebsocket.controller;
 
-import com.example.lwlwebsocket.entity.LoginEntity;
+import com.example.lwlwebsocket.vo.LoginEntity;
 import com.example.lwlwebsocket.entity.User;
 import com.example.lwlwebsocket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

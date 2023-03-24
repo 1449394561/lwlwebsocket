@@ -1,4 +1,4 @@
-package com.example.lwlwebsocket.entity;
+package com.example.lwlwebsocket.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
