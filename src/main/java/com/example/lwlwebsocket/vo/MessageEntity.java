@@ -23,6 +23,10 @@ public class MessageEntity {
 
     private Chats chats;
 
+    private Chats chatsfrom;
+
     private ChatVo chatVo;
+
+
 
 }
