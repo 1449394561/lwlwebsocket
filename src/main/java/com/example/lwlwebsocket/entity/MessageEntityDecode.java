@@ -1,5 +1,6 @@
 package com.example.lwlwebsocket.entity;
 
+import com.example.lwlwebsocket.vo.MessageEntity;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 

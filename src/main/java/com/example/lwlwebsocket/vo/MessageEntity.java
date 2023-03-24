@@ -1,5 +1,6 @@
-package com.example.lwlwebsocket.entity;
+package com.example.lwlwebsocket.vo;
 
+import com.example.lwlwebsocket.entity.Chats;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,9 @@ public class MessageEntity {
     private String message;
     // 发送时间
     private Date time;
+
+    private Chats chats;
+
+    private ChatVo chatVo;
 
 }

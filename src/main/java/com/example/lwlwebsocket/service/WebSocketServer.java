@@ -1,6 +1,7 @@
 package com.example.lwlwebsocket.service;
 
-import com.example.lwlwebsocket.entity.MessageEntity;
+import com.example.lwlwebsocket.vo.ChatVo;
+import com.example.lwlwebsocket.vo.MessageEntity;
 import com.example.lwlwebsocket.entity.MessageEntityDecode;
 import com.example.lwlwebsocket.entity.MessageEntityEncode;
 import com.example.lwlwebsocket.utils.CustomSpringConfigurator;
@@ -59,7 +60,20 @@ public class WebSocketServer {
         redis.set(key, message);
         System.out.println(message);
         // 如果用户在线就将信息发送给指定用户
+
+        if (message.getChats()!=null){
+            ChatVo chatVo=new ChatVo();
+            chatVo.setId(message.getChats().getFromid());
+            chatVo.setName(message.getChats().getName());
+            chatVo.setType(message.getChats().getType());
+            chatVo.setOnline(message.getChats().getOnline());
+            chatVo.setAvatar(message.getChats().getAvatar());
+            message.setChatVo(chatVo);
+        }
+
+        System.out.println(message.getTo());
         if (WEBSOCKET_MAP.get(message.getTo()) != null) {
+            System.out.println("发送");
             WEBSOCKET_MAP.get(message.getTo()).getBasicRemote().sendText(gson.toJson(message));
         }
     }
