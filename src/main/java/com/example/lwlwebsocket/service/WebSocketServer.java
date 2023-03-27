@@ -1,6 +1,8 @@
 package com.example.lwlwebsocket.service;
 
 import com.example.lwlwebsocket.dao.ChatsMapper;
+import com.example.lwlwebsocket.dao.HistoryMapper;
+import com.example.lwlwebsocket.entity.History;
 import com.example.lwlwebsocket.vo.ChatVo;
 import com.example.lwlwebsocket.vo.MessageEntity;
 import com.example.lwlwebsocket.vo.MessageEntityDecode;
@@ -15,6 +17,10 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -37,6 +43,9 @@ public class WebSocketServer {
     private static final Map<Long, Session> WEBSOCKET_MAP = new ConcurrentHashMap<>();
 
     @Autowired
+    private HistoryMapper historyMapper;
+
+    @Autowired
     public ChatsMapper chatsMapper;
 
     @Autowired
@@ -53,17 +62,22 @@ public class WebSocketServer {
     }
 
     @OnMessage
-    public void onMessage(MessageEntity message) throws IOException {
-        // 根据消息实体中的消息发送者和接受者的 id 组成信箱存储的键
-        // 按两人id升序并以 - 字符分隔为键
-        String key = LongStream.of(message.getFrom(), message.getTo())
-                .sorted()
-                .mapToObj(String::valueOf)
-                .collect(Collectors.joining("-"));
-        // 将信息存储到 redis 中
-        redis.set(key, message);
-        System.out.println(message);
-        // 如果用户在线就将信息发送给指定用户
+    public void onMessage(MessageEntity message) throws IOException, ParseException {
+
+        if (message.getMessage().getMessage()!=null){
+            // 根据消息实体中的消息发送者和接受者的 id 组成信箱存储的键
+            // 按两人id升序并以 - 字符分隔为键
+            String key = LongStream.of(message.getMessage().getFrom(), message.getMessage().getTo())
+                    .sorted()
+                    .mapToObj(String::valueOf)
+                    .collect(Collectors.joining("-"));
+            // 将信息存储到 redis 中
+            redis.set(key, message);
+            historyMapper.insert(message.getHistory());
+            System.out.println(message);
+            // 如果用户在线就将信息发送给指定用户
+        }
+
 
         if (message.getChats()!=null){
             ChatVo chatVo=new ChatVo();
@@ -77,10 +91,10 @@ public class WebSocketServer {
             chatsMapper.insert(message.getChatsfrom());
         }
 
-        System.out.println(message.getTo());
-        if (WEBSOCKET_MAP.get(message.getTo()) != null) {
+        System.out.println(message.getMessage().getTo());
+        if (WEBSOCKET_MAP.get(message.getMessage().getTo()) != null) {
             System.out.println("发送");
-            WEBSOCKET_MAP.get(message.getTo()).getBasicRemote().sendText(gson.toJson(message));
+            WEBSOCKET_MAP.get(message.getMessage().getTo()).getBasicRemote().sendText(gson.toJson(message));
         }
     }
 

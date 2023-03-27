@@ -1,5 +1,6 @@
 package com.example.lwlwebsocket.service;
 
+
 import com.example.lwlwebsocket.dao.UserDao;
 import com.example.lwlwebsocket.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import java.util.stream.LongStream;
 public class UserService {
 
     private final UserDao dao;
+
+
 
     @Autowired
     public UserService(UserDao dao) {
